@@ -2,7 +2,7 @@
 
 Unofficial mirror of Unifont, copied from http://unifoundry.com/unifont/index.html.
 
-## Current release: [v13.0.04](https://github.com/multitheftauto/unifont/releases/tag/v13.0.04)
+## Current release: [v13.0.06](https://github.com/multitheftauto/unifont/releases/tag/v13.0.06)
 
 ## License
 
