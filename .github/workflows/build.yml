@@ -1,0 +1,63 @@
+name: Build Unifont
+
+permissions:
+  # Required for uploading artifacts
+  actions: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      unifont_version:
+        description: 'The Unifont version to build (example: 15.1.01)'
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Unifont BMP TTF
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+
+      - name: Install required dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yq --no-install-recommends fontforge
+
+      - name: Download and verify Unifont v${{ inputs.unifont_version }}
+        run: |
+          readonly BASE_URL='https://unifoundry.com/pub/unifont/unifont-${{ inputs.unifont_version }}'
+          readonly SOURCE_TARBALL_NAME='unifont-${{ inputs.unifont_version }}.tar.gz'
+
+          echo "> Fetching Unifont source tarball and its signature..."
+          curl -o unifont.tar.gz "$BASE_URL/$SOURCE_TARBALL_NAME"
+          curl -o unifont.tar.gz.sig "$BASE_URL/$SOURCE_TARBALL_NAME.sig"
+
+          # Verify according to the instructions at https://unifoundry.com/verify/index.html
+          # with a known-good keyring at this repository
+          echo "> Asserting Unifont source tarball provenance..."
+          echo "Creating root of trust key"
+          gpg --batch --quick-generate-key --passphrase '' '41898282+github-actions[bot]@users.noreply.github.com'
+          echo "> Importing expected Unifoundry signing keys from unifoundry-keys.gpg"
+          gpg --batch --import unifoundry-keys.gpg
+          echo "> Extending trust to Unifoundry signing keys by signing with root of trust key"
+          gpg --list-keys --with-colons | awk -F: '/^fpr:/ { print $10 }' | while read -r key_fingerprint; do
+            gpg --batch --expert --quick-lsign "$key_fingerprint" || true
+          done
+          echo "> Verifying Unifont source tarball signature"
+          gpg --batch --verify unifont.tar.gz.sig unifont.tar.gz
+
+      - name: Extract and build Unifont BMP TTF
+        run: |
+          tar -xf unifont.tar.gz
+          mv 'unifont-${{ inputs.unifont_version }}' unifont
+          make -C unifont/font truetype
+
+      - name: Upload generated Unifont BMP TTF as artifact
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+        with:
+          name: Unifont BMP TTF
+          path: unifont/font/compiled/unifont-${{ inputs.unifont_version }}.ttf
