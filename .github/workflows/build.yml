@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4
 
       - name: Install required dependencies
         run: |
@@ -57,7 +57,7 @@ jobs:
           make -C unifont/font truetype
 
       - name: Upload generated Unifont BMP TTF as artifact
-        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
         with:
           name: Unifont BMP TTF
           path: unifont/font/compiled/unifont-${{ inputs.unifont_version }}.ttf
