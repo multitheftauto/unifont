@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    name: Unifont BMP TTF
+    name: Unifont TTF
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -61,3 +61,9 @@ jobs:
         with:
           name: Unifont BMP TTF
           path: unifont/font/compiled/unifont-${{ inputs.unifont_version }}.ttf
+
+      - name: Upload generated Unifont SMP TTF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unifont SMP TTF
+          path: unifont/font/compiled/unifont_upper-${{ inputs.unifont_version }}.ttf
