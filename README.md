@@ -2,7 +2,7 @@
 
 Unofficial mirror of Unifont release binaries, copied from http://unifoundry.com/unifont/index.html. In addition to that, we are also offering .ttf (TrueType) fonts that are no longer offered by unifoundry, as per [Release v15.1.01](https://github.com/multitheftauto/unifont/releases/tag/v15.1.01) and up, refer to the release post intro for details on how that's set up and why.
 
-## Current release: [v16.0.02](https://github.com/multitheftauto/unifont/releases/tag/v16.0.02)
+## Current release: [v16.0.03](https://github.com/multitheftauto/unifont/releases/tag/v16.0.03)
 
 ## About this Mirror
 
